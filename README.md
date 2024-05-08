@@ -1,2 +1,2 @@
-#Terminal Simulator
-##A python linux terminal emulator, with fake hacking commands
+# Terminal Simulator
+## A python linux terminal emulator, with fake hacking commands
