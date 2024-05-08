@@ -1,5 +1,6 @@
 import os
 import re
+import time
 from pathlib import Path
 import json
 
@@ -127,6 +128,18 @@ class Commands:
     def pwd(self, direc):
         direc = direc.replace("virtualenv", "@")
         self.console.print("\n"+direc)
+
+    def id(self, utype):
+        usertypes = ["guest", "root"]
+        user = usertypes[utype]
+        self.console.print("\n"+user)
+    def reload(self):
+        self.console.print("Reloading")
+        time.sleep(0.8)
+        text = json.dumps(1)
+        file = Path("status/reload.stat")
+        file.write_text(text)
+        os.system("py terminal.py")
 
 
     @staticmethod

@@ -1,6 +1,8 @@
+import json
 import os
 import sys
 import time
+from pathlib import Path
 
 from rich.console import Console
 from rich.live import Live
@@ -17,10 +19,11 @@ class Terminal:
         self.running = True
         self.dir = "virtualenv"
         self.umask = "022"
+        self.usertype = 1
         self.commands = Commands(self.console, self.umask)
         self.commandSyn = {"mkdir": ["mkdir", "md"], "rmdir": ["rmdir", "rm"], "remove": ["rm"], "ls": ["ls", "list"],
                            "echo": ["echo"], "clear": ["clear"], "shutdown": ["shutdown"], "reboot": ["reboot"],
-                           "pwd": ["pwd"], "cat": ["cat"], "cd": ["cd", "chdir"] }
+                           "pwd": ["pwd"], "cat": ["cat"], "cd": ["cd", "chdir"], "id": ["id"], "reload": ["reload", "rel"],}
 
     @staticmethod
     def countram(chars, mem):
@@ -35,6 +38,15 @@ class Terminal:
         return pri
 
     def turnon(self):
+        file = Path("status/reload.stat")
+        try:
+            content = file.read_text()
+            content = json.loads(content)
+            if content == 1:
+                file.write_text(json.dumps(0))
+                self.update()
+        except FileNotFoundError:
+            pass
         self.running = False
         self.commands.clear()
         prog = 0
@@ -108,6 +120,10 @@ class Terminal:
                 os.system("py terminal.py")
             elif comd in self.commandSyn.get("pwd"):
                 self.commands.pwd(self.dir)
+            elif comd in self.commandSyn.get("id"):
+                self.commands.id(self.usertype)
+            elif comd in self.commandSyn.get("reload"):
+                self.commands.reload()
             else:
                 self.console.print("Command " + lest[0] + " not found")
 
