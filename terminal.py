@@ -19,7 +19,8 @@ class Terminal:
         self.umask = "022"
         self.commands = Commands(self.console, self.umask)
         self.commandSyn = {"mkdir": ["mkdir", "md"], "rmdir": ["rmdir", "rm"], "remove": ["rm"], "ls": ["ls", "list"],
-                           "echo": ["echo"], "clear": ["clear"], "shutdown": ["shutdown"], "reboot": ["reboot"], }
+                           "echo": ["echo"], "clear": ["clear"], "shutdown": ["shutdown"], "reboot": ["reboot"],
+                           "pwd": ["pwd"], "cat": ["cat"], "cd": ["cd", "chdir"] }
 
     @staticmethod
     def countram(chars, mem):
@@ -90,6 +91,7 @@ class Terminal:
             elif comd in self.commandSyn.get("mkdir"):
                 self.commands.mkdir(lest, self.dir)
             elif comd in self.commandSyn.get("cd"):
+                self.console.print(self.commands.cd(lest, self.dir))
                 self.dir = self.commands.cd(lest, self.dir)
             elif comd in self.commandSyn.get("ls"):
                 self.commands.ls(self.dir)
@@ -104,6 +106,8 @@ class Terminal:
                 self.console.print("Rebooting...")
                 time.sleep(1)
                 os.system("py terminal.py")
+            elif comd in self.commandSyn.get("pwd"):
+                self.commands.pwd(self.dir)
             else:
                 self.console.print("Command " + lest[0] + " not found")
 

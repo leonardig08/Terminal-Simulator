@@ -46,6 +46,7 @@ class Commands:
         if i == ".":
             lul = direc.split("/")
             if os.path.isdir(lul.pop(len(lul) - 1)):
+                print("no dir" + lul)
                 direc = "/".join(lul)
             else:
                 pass
@@ -81,9 +82,10 @@ class Commands:
     def echo(self, lest, direc):
         check = 0
         print(lest)
-        cont = "".join(lest)
+        cont = " ".join(lest)
         stringer = str(re.findall("(\".+\")", cont)[0])
         stringer = stringer.replace('"', "")
+        stringer = stringer.encode().decode("unicode_escape")
         for i in lest[1:]:
             if i == ">" and len(lest) >= 3:
                 try:
@@ -96,7 +98,7 @@ class Commands:
                 file.write_text(stringer)
                 properties = 666
                 properties -= int(self.umask)
-                info = Path(f"prop/{direc}/{i}.prop")
+                info = Path(f"prop/{direc}/{title}.prop")
                 write = json.dumps(properties)
                 info.write_text(write)
                 check = 1
@@ -115,12 +117,17 @@ class Commands:
                     file.write_text(stringer)
                     properties = 666
                     properties -= int(self.umask)
-                    info = Path(f"prop/{direc}/{i}.prop")
+                    info = Path(f"prop/{direc}/{title}.prop")
                     write = json.dumps(properties)
                     info.write_text(write)
                 check = 1
         if check == 0:
             self.console.print(stringer)
+
+    def pwd(self, direc):
+        direc = direc.replace("virtualenv", "@")
+        self.console.print("\n"+direc)
+
 
     @staticmethod
     def clear():
